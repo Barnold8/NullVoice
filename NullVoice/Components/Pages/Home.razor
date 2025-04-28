@@ -4,9 +4,12 @@
 @using NullVoice.Models
 @inject IDbContextFactory<NullVoice.Data.NullVoiceContext> DbFactory
 @inject NavigationManager NavigationManager
+
 <PageTitle>Home</PageTitle>
 
-<div class="d-flex justify-content-center align-items-center vh-100">
+
+
+<div class="d-flex justify-content-center align-items-center ">
     <EditForm method="post" Model="Thought" OnValidSubmit="AddThought" FormName="create" Enhance>
         <DataAnnotationsValidator />
         <ValidationSummary class="text-danger" role="alert" />
@@ -15,7 +18,7 @@
             <label for="contents" class="form-label display-1">Shout into the void</label>
         </div>
 
-        <div class="mb-2">
+        <div class="mb-1">
             <InputText id="contents" @bind-Value="Thought.Contents" class="form-control" /> <ValidationMessage For="() => Thought.Contents" class="text-danger" />
         </div>
 
@@ -27,14 +30,6 @@
     </EditForm>
 </div>
 
-
-<div class="container">
-    <div class="row">
-        <div class="col text-center">
-            <button class="btn btn-default">Centered button</button>
-        </div>
-    </div>
-</div>
 
 
 @code {
