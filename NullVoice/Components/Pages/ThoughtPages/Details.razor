@@ -1,0 +1,48 @@
+﻿@page "/thoughts/details"
+@using Microsoft.EntityFrameworkCore
+@using NullVoice
+@inject IDbContextFactory<NullVoice.Data.NullVoiceContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h2>Thought</h2>
+    <hr />
+    @if (thought is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">Contents</dt>
+            <dd class="col-sm-10">@thought.Contents</dd>
+            <dt class="col-sm-2">SentDate</dt>
+            <dd class="col-sm-10">@thought.SentDate</dd>
+        </dl>
+        <div>
+            <a href="@($"/thoughts/edit?id={thought.Id}")">Edit</a> |
+            <a href="@($"/thoughts")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    private Thought? thought;
+
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        thought = await context.Thought.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (thought is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}
