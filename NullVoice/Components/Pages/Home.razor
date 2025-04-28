@@ -1,7 +1,60 @@
 ﻿@page "/"
-
+@using Microsoft.EntityFrameworkCore
+@using NullVoice
+@using NullVoice.Models
+@inject IDbContextFactory<NullVoice.Data.NullVoiceContext> DbFactory
+@inject NavigationManager NavigationManager
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <EditForm method="post" Model="Thought" OnValidSubmit="AddThought" FormName="create" Enhance>
+        <DataAnnotationsValidator />
+        <ValidationSummary class="text-danger" role="alert" />
 
-Welcome to your new app.
+        <div class="text-center">
+            <label for="contents" class="form-label display-1">Shout into the void</label>
+        </div>
+
+        <div class="mb-2">
+            <InputText id="contents" @bind-Value="Thought.Contents" class="form-control" /> <ValidationMessage For="() => Thought.Contents" class="text-danger" />
+        </div>
+
+        <ValidationMessage For="() => Thought.SentDate" class="text-danger" />
+
+        <div class="d-grid justify-content-center">
+            <button type="submit" class="btn btn-primary">Create</button>
+        </div>
+    </EditForm>
+</div>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col text-center">
+            <button class="btn btn-default">Centered button</button>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    [SupplyParameterFromForm]
+    private Thought Thought { get; set; } = new();
+
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddThought()
+    {
+        Thought.SentDate = DateOnly.FromDateTime(DateTime.Now);
+
+        if (Thought != null && Thought.Contents.Length >= 1)
+        {
+            using var context = DbFactory.CreateDbContext();
+            context.Thought.Add(Thought);
+            await context.SaveChangesAsync();
+            NavigationManager.NavigateTo("/thoughts");
+        }
+
+
+    }
+}

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using NullVoice;
+using NullVoice.Models;
 
 namespace NullVoice.Data
 {
@@ -14,6 +14,6 @@ namespace NullVoice.Data
         {
         }
 
-        public DbSet<NullVoice.Thought> Thought { get; set; } = default!;
+        public DbSet<Thought> Thought { get; set; } = default!;
     }
 }

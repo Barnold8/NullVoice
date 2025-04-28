@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace NullVoice
+namespace NullVoice.Models
 {
     public class Thought
     {
