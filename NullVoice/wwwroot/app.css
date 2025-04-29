@@ -3,7 +3,9 @@ html, body {
     /*background:#030303;*/
 
 }
-
+canvas {
+    display: block;
+}
 a, .btn-link {
     color: #e94f37;
 }

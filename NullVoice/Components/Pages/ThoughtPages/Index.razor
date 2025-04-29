@@ -3,35 +3,68 @@
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using NullVoice
 @using NullVoice.Data
+@rendermode InteractiveServer
 @implements IAsyncDisposable
+@inject IJSRuntime JS
 @inject IDbContextFactory<NullVoice.Data.NullVoiceContext> DbFactory
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Thoughts</PageTitle>
 
-<h1>Index</h1>
+@foreach (var thought in thoughts)
+{
+    <span style="display:none;">@thought.Contents</span>
+}
 
-<p>
-    <a href="thoughts/create">Create New</a>
-</p>
 
-<QuickGrid Class="table" Items="context.Thought">
-    <PropertyColumn Property="thought => thought.Contents" />
-    <PropertyColumn Property="thought => thought.SentDate" />
-
-    <TemplateColumn Context="thought">
-        <a href="@($"thoughts/edit?id={thought.Id}")">Edit</a> |
-        <a href="@($"thoughts/details?id={thought.Id}")">Details</a> |
-        <a href="@($"thoughts/delete?id={thought.Id}")">Delete</a>
-    </TemplateColumn>
-</QuickGrid>
+<div id="p5-container"></div>
 
 @code {
-    private NullVoiceContext context = default!;
 
+    private IJSObjectReference? module;
+    private DbSet<Models.Thought> thoughts;
+
+
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        Console.WriteLine("OnAfterRenderAsync called");
+
+        if (firstRender)
+        {
+
+            module = await JS.InvokeAsync<IJSObjectReference>("import",
+            "/JS/sketch.js");
+
+            if (module != null)
+            {
+                await module.InvokeVoidAsync("initializeP5", "p5-container");
+            }
+
+        }
+    }
+    async ValueTask IAsyncDisposable.DisposeAsync()
+    {
+        if (module is not null)
+        {
+            try
+            {
+                await module.DisposeAsync();
+            }
+            catch (JSDisconnectedException)
+            {
+            }
+        }
+    }
+
+    // Database stuff
+    private NullVoiceContext context = default!;
     protected override void OnInitialized()
     {
         context = DbFactory.CreateDbContext();
+        thoughts = context.Thought;
     }
-
     public async ValueTask DisposeAsync() => await context.DisposeAsync();
 }
+
+
+
+
