@@ -10,23 +10,25 @@
 
 <PageTitle>Thoughts</PageTitle>
 
-@foreach (var thought in thoughts)
+@if (thoughts != null)
 {
-    <span style="display:none;">@thought.Contents</span>
+    @foreach (var thought in thoughts)
+    {
+        <span style="display:none;" class="thoughtContent">@thought.Contents</span>
+    }
 }
-
 
 <div id="p5-container"></div>
 
 @code {
 
     private IJSObjectReference? module;
-    private DbSet<Models.Thought> thoughts;
+    private DbSet<Models.Thought>? thoughts;
 
 
     protected async override Task OnAfterRenderAsync(bool firstRender)
     {
-        Console.WriteLine("OnAfterRenderAsync called");
+       
 
         if (firstRender)
         {

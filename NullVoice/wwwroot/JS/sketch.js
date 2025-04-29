@@ -1,8 +1,14 @@
 ﻿
-var strings = ["A","B","C"]
+var strings = []
 
+function grabContents(thought) {
+    return thought.innerText
+}
 
 export function initializeP5(elementId) {
+    strings = document.getElementsByClassName("thoughtContent")
+    strings = [].slice.call(strings)
+    strings = strings.map(grabContents)
     new p5(sketch, elementId);
 }
 

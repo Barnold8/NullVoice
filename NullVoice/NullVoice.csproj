@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\JS\Index.js" />
     <None Include="wwwroot\JS\sketch.js" />
   </ItemGroup>
 
